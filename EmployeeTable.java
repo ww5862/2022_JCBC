@@ -150,6 +150,7 @@ public class EmployeeTable extends JPanel{
 	}
 	
 	private class EmployeeTableHandler implements ActionListener{
+		
 		private String selectWhere(ActionEvent e) {
 			String res = "";
 			/*
@@ -162,19 +163,20 @@ public class EmployeeTable extends JPanel{
 			if(setSelectW.getSelectedItem() == "전체") return "";
 			
 			if(setSelectW.getSelectedItem() == "부서") {
+				res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
 				
 			}
 			
 			if(setSelectW.getSelectedItem() == "성별") {
-				
+				res = " and e.Sex = '" + setSelectS.getSelectedItem() + "'";
 			}
 			
 			if(setSelectW.getSelectedItem() == "연봉") {
-				
+				res = " and e.Salary >= " + selectSal.getText();
 			}
 			
 			if(setSelectW.getSelectedItem() == "생일") {
-				
+				res = " and Month(e.Bdate) = " + setMonth.getSelectedItem();
 			}
 			
 			return res;
@@ -241,6 +243,7 @@ public class EmployeeTable extends JPanel{
 						
 					sql += "from employee e left outer join employee s on e.super_ssn=s.ssn, Department where e.Dno = Dnumber";
 					sql += selectWhere(e);
+					System.out.println(sql);
 					try {
 						stmt = conn.createStatement();
 					}catch (SQLException e1) { e1.printStackTrace(); }
@@ -383,22 +386,20 @@ public class EmployeeTable extends JPanel{
 			
 			//검색값
 			if(e.getSource() == setSelectW) {
+				
+				
+				
 				setSelectD.setVisible(false);
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
+				
 				
 				if(setSelectW.getSelectedItem() == "부서") setSelectD.setVisible(true);
 				if(setSelectW.getSelectedItem() == "성별") setSelectS.setVisible(true);
 				if(setSelectW.getSelectedItem() == "연봉") selectSal.setVisible(true);
 				if(setSelectW.getSelectedItem() == "생일") setMonth.setVisible(true);
 				
-				if(isSearch = true) {
-					header.clear();
-					selectSearch(e);
-					isSearch = false;
-				}
-				revalidate();
 			}
 			
 			//검색 버튼 클릭시
