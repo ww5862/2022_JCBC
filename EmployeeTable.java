@@ -11,7 +11,7 @@ import javax.swing.table.TableModel;
 
 public class EmployeeTable extends JPanel{
 	
-	private final String selectW[] = {"전체", "부서", "성별", "연봉", "생일" };
+	private final String selectW[] = {"전체", "부서", "성별", "연봉", "생일" , "부하 직원"};
 	private JComboBox setSelectW = new JComboBox(selectW);
 	
 	private final String selectD[] = {"Headquarters", "Administration", "Research"};
@@ -21,6 +21,7 @@ public class EmployeeTable extends JPanel{
 	private JComboBox setSelectS = new JComboBox(selectS);
 	
 	private JTextField selectSal = new JTextField(10);
+	private JTextField underline = new JTextField(15);
 	
 	private final String month[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
 	private JComboBox setMonth = new JComboBox(month);
@@ -36,6 +37,9 @@ public class EmployeeTable extends JPanel{
 	private JCheckBox department_b = new JCheckBox("Department", true);
 	private JButton search_b = new JButton("검색");
 	private JButton insert_b = new JButton("추가하기");
+	private JButton salary_up = new JButton("월급 인상");
+	private JButton knowDepent = new JButton("가족 확인");
+	
 	private Vector<String> header = new Vector<String>();
 	
 	private DefaultTableModel model;
@@ -83,11 +87,13 @@ public class EmployeeTable extends JPanel{
 		selectMenuN.add(setSelectS);
 		selectMenuN.add(selectSal);
 		selectMenuN.add(setMonth);
+		selectMenuN.add(underline);
 		
 		setSelectD.setVisible(false);
 		setSelectS.setVisible(false);
 		selectSal.setVisible(false);
 		setMonth.setVisible(false);
+		underline.setVisible(false);
 		
 		selectMenu.add(selectMenuN, BorderLayout.NORTH);
 		
@@ -102,6 +108,8 @@ public class EmployeeTable extends JPanel{
 		selectMenuS.add(department_b);
 		selectMenuS.add(search_b);
 		selectMenuS.add(insert_b);
+		selectMenuS.add(salary_up);
+		selectMenuS.add(knowDepent);
 		selectMenu.add(selectMenuS, BorderLayout.SOUTH);
 		
 		this.add(selectMenu, BorderLayout.NORTH);
@@ -146,6 +154,8 @@ public class EmployeeTable extends JPanel{
 		del_b.addActionListener(handler);
 		setUpdateb.addActionListener(handler);
 		insert_b.addActionListener(handler);
+		salary_up.addActionListener(handler);
+		knowDepent.addActionListener(handler);
 		
 	}
 	
@@ -177,6 +187,9 @@ public class EmployeeTable extends JPanel{
 			
 			if(setSelectW.getSelectedItem() == "생일") {
 				res = " and Month(e.Bdate) = " + setMonth.getSelectedItem();
+			}
+			if(setSelectW.getSelectedItem() == "부하 직원") {
+				res = " and concat(s.Fname, ' ',s. Minit, ' ', s.Lname) = '" + underline.getText() + "'";
 			}
 			
 			return res;
@@ -374,6 +387,24 @@ public class EmployeeTable extends JPanel{
 			InsertFrame a = new InsertFrame();
 		}
 		
+		private void increaseSalary(ActionEvent e) {
+			IncreaseSalary a = new IncreaseSalary();
+		}
+		
+		private void printDependent(ActionEvent e) {
+			int ssnLoc = 1;
+			String colName = model.getColumnName(ssnLoc);
+			if(colName != "SSN") colName = model.getColumnName(++ssnLoc);
+			if(colName != "SSN") return;
+			
+			Vector<String> arrSsn = new Vector<String>();
+			for(int i= 0; i < table.getRowCount(); i++) {
+				arrSsn.add((String)table.getValueAt(i, ssnLoc));
+			}
+			PrintDependent a = new PrintDependent(arrSsn);
+			//here to
+		}
+		
 		@Override
 		public void actionPerformed(ActionEvent e) {
 			if(isTable) { // 테이블 초기화
@@ -390,11 +421,13 @@ public class EmployeeTable extends JPanel{
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
+				underline.setVisible(false);
 				
 				if(setSelectW.getSelectedItem() == "부서") setSelectD.setVisible(true);
 				if(setSelectW.getSelectedItem() == "성별") setSelectS.setVisible(true);
 				if(setSelectW.getSelectedItem() == "연봉") selectSal.setVisible(true);
 				if(setSelectW.getSelectedItem() == "생일") setMonth.setVisible(true);
+				if(setSelectW.getSelectedItem() == "부하 직원")underline.setVisible(true);
 				
 				revalidate();
 				
@@ -405,6 +438,13 @@ public class EmployeeTable extends JPanel{
 				isSearch = true;
 				header.clear();
 				selectSearch(e);
+			}
+			
+			if(e.getSource() == salary_up) {
+				header.clear();
+				selectSearch(e);
+				increaseSalary(e);
+				
 			}
 			
 			if(e.getSource() == del_b) {
@@ -423,6 +463,12 @@ public class EmployeeTable extends JPanel{
 				//repaint을 위해서 다시 호출
 				header.clear();
 				selectSearch(e);
+			}
+			
+			if(e.getSource() == knowDepent) {
+				header.clear();
+				selectSearch(e);
+				printDependent(e);
 			}
 			
 			if(e.getSource() == insert_b) {
@@ -459,6 +505,231 @@ public class EmployeeTable extends JPanel{
 	
 	
 }// end class
+
+//here to code
+class PrintDependent extends JFrame{
+	private DefaultTableModel model;
+	private JTable table;
+	private JPanel table_panel;
+	JScrollPane Sc;
+	private Container del = this;
+	
+	private JButton search = new JButton("확인");
+	
+	private Vector<String> header = new Vector();
+	
+	private JPanel southP = new JPanel();
+	
+	private Vector<String> ssn = new Vector();
+	
+	
+	PrintDependent(Vector<String> ssnI){
+		setTitle("Dependent"); //윈도우 제목 생성
+		setLayout(new BorderLayout());
+		
+		for(Object s: ssnI) {
+			ssn.add((String)s);
+		}
+		
+		Main getConn = new Main();
+		Connection conn = getConn.getConn();
+		
+		String sql = "Select concat(e.Fname, ' ',e.Minit, ' ',e.Lname) as name, d.Dependent_name, d.Sex, d.Bdate, d.Relationship from employee as e, dependent as d where e.ssn = d.Essn and e.Ssn = ?";
+		
+		//header 추가
+		header.add("Name");
+		header.add("dependent Name");
+		header.add("Sex");
+		header.add("Birth");
+		header.add("RelationShip");
+		
+		model = new DefaultTableModel(header, 0) {
+			@Override
+			public boolean isCellEditable(int row, int column) {
+				if (column > 0) {
+					return false;
+				} else {
+					return true;
+				}
+			}
+		};
+		
+		table = new JTable(model) {
+			@Override
+			public Class getColumnClass(int column) {
+					return String.class;
+			}
+		};
+		
+		try {
+			PreparedStatement p = conn.prepareStatement(sql);
+			p.clearParameters();
+			
+			for(Object s: ssn) {
+				p.clearParameters();
+				p.setString(1, (String)s);
+				ResultSet r = p.executeQuery();
+				
+				while(r.next()) {
+					Vector<String> tmp = new Vector();
+					tmp.add(r.getString(1));
+					tmp.add(r.getString(2));
+					tmp.add(r.getString(3));
+					tmp.add(r.getString(4));
+					tmp.add(r.getString(5));
+					model.addRow(tmp);
+				}
+				
+				table_panel = new JPanel();
+				Sc = new JScrollPane(table);
+				Sc.setPreferredSize(new Dimension(1000, 5000));
+				table_panel.add(Sc);
+				add(table_panel);
+				revalidate();
+			}
+			
+			
+		}catch(SQLException e1) {e1.printStackTrace();}
+		
+		setSize(1000, 400);
+		setVisible(true);
+		
+		
+	}
+	
+	private class EmployeeTableHandler implements ActionListener{
+		private void selectSearch(ActionEvent e) {
+			Main getConn = new Main();
+			Connection conn = getConn.getConn();
+			
+			String sql = "Select concat(e.Fname, ' ',e.Minit, ' ',e.Lname) as name, d.Dependent_name, d.Sex, d.Bdate, d.Relationship from employee as e, dependent as d where e.ssn = d.Essn and e.Ssn = ?";
+			
+			//header 추가
+			header.add("Name");
+			header.add("dependent Name");
+			header.add("Sex");
+			header.add("Birth");
+			header.add("RelationShip");
+			
+			model = new DefaultTableModel(header, 0) {
+				@Override
+				public boolean isCellEditable(int row, int column) {
+					if (column > 0) {
+						return false;
+					} else {
+						return true;
+					}
+				}
+			};
+			
+			table = new JTable(model) {
+				@Override
+				public Class getColumnClass(int column) {
+						return String.class;
+				}
+			};
+			
+			try {
+				PreparedStatement p = conn.prepareStatement(sql);
+				p.clearParameters();
+				
+				for(Object s: ssn) {
+					p.clearParameters();
+					p.setString(1, (String)s);
+					ResultSet r = p.executeQuery();
+					
+					while(r.next()) {
+						Vector<String> tmp = new Vector();
+						tmp.add(r.getString(1));
+						tmp.add(r.getString(2));
+						tmp.add(r.getString(3));
+						tmp.add(r.getString(4));
+						tmp.add(r.getString(5));
+						model.addRow(tmp);
+					}
+					
+					table_panel = new JPanel();
+					Sc = new JScrollPane(table);
+					Sc.setPreferredSize(new Dimension(1000, 400));
+					table_panel.add(Sc);
+					add(table_panel);
+					revalidate();
+				}
+				
+				
+			}catch(SQLException e1) {e1.printStackTrace();}
+			
+		}
+		
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == search) selectSearch(e);
+			
+		}
+		
+	}
+}
+
+class IncreaseSalary extends JFrame{
+	private final String selectD[] = {"Headquarters", "Administration", "Research"};
+	private JComboBox setSelectD = new JComboBox(selectD);
+	
+	private JLabel increaseLabel = new JLabel("인상: ");
+	private JTextField increase = new JTextField(10);
+	
+	private JButton b = new JButton("확인");
+	
+	private JPanel select = new JPanel();
+	private JPanel texter = new JPanel();
+	
+	IncreaseSalary(){
+		setTitle("Salary"); //윈도우 제목 생성
+		setLayout(new BorderLayout());
+		
+		select.add(setSelectD);
+		texter.add(increaseLabel);
+		texter.add(increase);
+		texter.add(b);
+		
+		this.add(select, BorderLayout.NORTH);
+		this.add(texter, BorderLayout.CENTER);
+		
+		
+		setSize(300, 150);
+		setVisible(true);
+		
+		InsertHandler handler = new InsertHandler();
+		b.addActionListener(handler);
+		
+	}
+	
+	private class InsertHandler implements ActionListener{
+
+		@Override
+		public void actionPerformed(ActionEvent e) {
+			if(e.getSource() == b) {
+				Main getConn = new Main();
+				Connection conn = getConn.getConn();
+				
+				String sql = "Update Employee set salary = salary + ? where Dno = (select dnumber from department where Dname = ?)";
+				try {
+					PreparedStatement p = conn.prepareStatement(sql);
+					p.clearParameters();
+					
+					if(increase.getText().contentEquals("")) p.setInt(1, 0);
+					else p.setInt(1, Integer.parseInt(increase.getText()));
+					
+					p.setString(2, (String)setSelectD.getSelectedItem());
+					
+					int c = p.executeUpdate();
+					if(c > 0) dispose();
+				} catch(SQLException e1) {e1.printStackTrace(); JOptionPane.showMessageDialog(null, "다시 입력하세요.");}
+			}
+			
+		}
+		
+	}
+}
 
 class InsertFrame extends JFrame{
 	private Container del = this;
@@ -524,6 +795,7 @@ class InsertFrame extends JFrame{
 		
 		bPanel.add(b);
 		
+		
 		this.add(top, BorderLayout.NORTH);
 		this.add(button, BorderLayout.CENTER);
 		this.add(b, BorderLayout.SOUTH);
@@ -531,7 +803,7 @@ class InsertFrame extends JFrame{
 		InsertHandler handler = new InsertHandler();
 		
 		b.addActionListener(handler);
-		dispose();
+		
 		setSize(500, 500);
 		setVisible(true);
 		
@@ -541,6 +813,7 @@ class InsertFrame extends JFrame{
 		
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
+			//here to copy
 			Main getConn = new Main();
 			Connection conn = getConn.getConn();
 			
@@ -564,6 +837,7 @@ class InsertFrame extends JFrame{
 				else p.setInt(10, Integer.parseInt(dno.getText()));
 				
 				int c = p.executeUpdate();
+				if(c == 1) dispose();
 			} catch(SQLException e1) {e1.printStackTrace(); JOptionPane.showMessageDialog(null, "다시 입력하세요.");}
 		}
 	}
