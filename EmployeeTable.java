@@ -386,19 +386,17 @@ public class EmployeeTable extends JPanel{
 			
 			//검색값
 			if(e.getSource() == setSelectW) {
-				
-				
-				
 				setSelectD.setVisible(false);
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
 				
-				
 				if(setSelectW.getSelectedItem() == "부서") setSelectD.setVisible(true);
 				if(setSelectW.getSelectedItem() == "성별") setSelectS.setVisible(true);
 				if(setSelectW.getSelectedItem() == "연봉") selectSal.setVisible(true);
 				if(setSelectW.getSelectedItem() == "생일") setMonth.setVisible(true);
+				
+				revalidate();
 				
 			}
 			
