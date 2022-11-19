@@ -9,9 +9,9 @@ import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class EmployeeTable extends JPanel {
-
-	private final String selectW[] = { "전체", "부서", "성별", "연봉", "생일", "부하 직원" };
+public class EmployeeTable extends JPanel{
+	
+	private final String selectW[] = {"전체", "부서", "성별", "연봉", "생일" };
 	private JComboBox setSelectW = new JComboBox(selectW);
 
 	// private final String selectD[] = { "Headquarters", "Administration",
@@ -30,8 +30,8 @@ public class EmployeeTable extends JPanel {
 
 	private final String month[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
 	private JComboBox setMonth = new JComboBox(month);
-
-	private JLabel label = new JLabel("검색 항목");
+	
+	private JLabel label = new JLabel("�˻� �׸�");
 	private JCheckBox name_b = new JCheckBox("Name", true);
 	private JCheckBox ssn_b = new JCheckBox("Ssn", true);
 	private JCheckBox bdate_b = new JCheckBox("Bdate", true);
@@ -40,13 +40,10 @@ public class EmployeeTable extends JPanel {
 	private JCheckBox salary_b = new JCheckBox("Salary", true);
 	private JCheckBox supervisor_b = new JCheckBox("Supervisor", true);
 	private JCheckBox department_b = new JCheckBox("Department", true);
-	private JButton search_b = new JButton("검색");
-	private JButton insert_b = new JButton("추가하기");
-	private JButton salary_up = new JButton("월급 인상");
-	private JButton knowDepent = new JButton("가족 확인");
-
+	private JButton search_b = new JButton("�˻�");
+	private JButton insert_b = new JButton("�߰��ϱ�");
 	private Vector<String> header = new Vector<String>();
-
+	
 	private DefaultTableModel model;
 	private JTable table;
 	private JPanel table_panel;
@@ -58,15 +55,15 @@ public class EmployeeTable extends JPanel {
 
 	private Statement stmt;
 	private ResultSet rs;
-
-	private JLabel selectTotalLabel = new JLabel("인원 수: ");
-	private JLabel boxSelect = new JLabel("선택한 직원: ");
+	
+	private JLabel selectTotalLabel = new JLabel("�ο� ��: ");
+	private JLabel boxSelect = new JLabel("������ ����: ");
 	private JLabel selectTotalCnt = new JLabel(" ");
 	private JLabel boxSelectCnt = new JLabel(" ");
-	private JButton del_b = new JButton("삭제");
-
-	private static final String updateString[] = { "Address", "Sex", "Salary" };
-	private JLabel setUpdateL = new JLabel("수정:");
+	private JButton del_b =  new JButton("����");
+	
+	private static final String updateString[] = {"Address", "Sex", "Salary"};
+	private JLabel setUpdateL = new JLabel("����:");
 	private JComboBox setUpdateC = new JComboBox(updateString);
 	private JTextField setUpdate = new JTextField(20);
 	private JButton setUpdateb = new JButton("Update");
@@ -197,27 +194,25 @@ public class EmployeeTable extends JPanel {
 			 * selectMenuN.add(setSelectD); selectMenuN.add(setSelectS);
 			 * selectMenuN.add(selectSal); selectMenuN.add(setMonth);
 			 */
-
-			if (setSelectW.getSelectedItem() == "전체")
-				return "";
-
-			if (setSelectW.getSelectedItem() == "부서") {
-				// res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
-				res = " and Dname = '" + selectD.getText() + "'";
+			
+			if(setSelectW.getSelectedItem() == "전체") return "";
+			
+			if(setSelectW.getSelectedItem() == "부서") {
+				res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
 				
 				//hyein
 				search_as_dSalary = true;
 			}
-
-			if (setSelectW.getSelectedItem() == "성별") {
+			
+			if(setSelectW.getSelectedItem() == "성별") {
 				res = " and e.Sex = '" + setSelectS.getSelectedItem() + "'";
 			}
-
-			if (setSelectW.getSelectedItem() == "연봉") {
+			
+			if(setSelectW.getSelectedItem() == "연봉") {
 				res = " and e.Salary >= " + selectSal.getText();
 			}
-
-			if (setSelectW.getSelectedItem() == "생일") {
+			
+			if(setSelectW.getSelectedItem() == "생일") {
 				res = " and Month(e.Bdate) = " + setMonth.getSelectedItem();
 			}
 			if (setSelectW.getSelectedItem() == "부하 직원") {
@@ -235,16 +230,14 @@ public class EmployeeTable extends JPanel {
 				Main getConn = new Main();
 				Connection conn = getConn.getConn();
 				String sql = "select ";
-
-				// Header 채우기
+				
+				//Header ä���
 				header.add("선택");
-
-				if (name_b.isSelected()) {
-					if (!ssn_b.isSelected() && !bdate_b.isSelected() && !address_b.isSelected() && !sex_b.isSelected()
-							&& !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())
-						sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name ";
-					else
-						sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name, ";
+						
+				if(name_b.isSelected()) {
+					if(!ssn_b.isSelected() && !bdate_b.isSelected() && !address_b.isSelected() &&
+					!sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())  sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name ";
+					else sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name, ";
 					header.add("Name");
 				}
 
@@ -512,166 +505,51 @@ public class EmployeeTable extends JPanel {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			// 검색값
-			if (e.getSource() == setSelectW) {
-				// setSelectD.setVisible(false);
-				selectD.setVisible(false);
-				// hyein
-				dSalary.setVisible(false);
+			if(isTable) { // ���̺� �ʱ�ȭ
+				boxSelectCnt.setText("");
+				del.remove(table_panel);
+				selectTotalCnt.setText("");
+				
+				revalidate();
+			}
+			
+			//�˻���
+			if(e.getSource() == setSelectW) {
+				setSelectD.setVisible(false);
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
-				underline.setVisible(false);
-
-				/*
-				 * if (setSelectW.getSelectedItem() == "부서") setSelectD.setVisible(true);
-				 */
-				if (setSelectW.getSelectedItem() == "부서"){
-					selectD.setVisible(true);
-					// hyein
-					dSalary.setVisible(true);
-				}
-					
-				if (setSelectW.getSelectedItem() == "성별"){
-					setSelectS.setVisible(true);
-					// hyein
-					dSalary.setVisible(false);
-				}
-					
-				if (setSelectW.getSelectedItem() == "연봉"){
-					selectSal.setVisible(true);
-					// hyein
-					dSalary.setVisible(false);
-				}
-					
-				if (setSelectW.getSelectedItem() == "생일"){
-					setMonth.setVisible(true);
-					// hyein
-					dSalary.setVisible(false);
-				}
-					
-				if (setSelectW.getSelectedItem() == "부하 직원"){
-					underline.setVisible(true);
-					// hyein
-					dSalary.setVisible(false);
-				}
-
+				
+				if(setSelectW.getSelectedItem() == "�μ�") setSelectD.setVisible(true);
+				if(setSelectW.getSelectedItem() == "����") setSelectS.setVisible(true);
+				if(setSelectW.getSelectedItem() == "����") selectSal.setVisible(true);
+				if(setSelectW.getSelectedItem() == "����") setMonth.setVisible(true);
+				
 				revalidate();
-
+				
 			}
-
-			//hyein
-			if (e.getSource() == setSorting) {
-				if (setSorting.getSelectedItem() == "정렬 없음"){
-					order_by = "";
-				} 
-
-				if (setSorting.getSelectedItem() == "NAME 순"){
-					order_by = " ORDER BY e.Fname";
-				}
-
-				if (setSorting.getSelectedItem() == "SSN 순"){
-					order_by = " ORDER BY e.Ssn";
-				}
-
-				if (setSorting.getSelectedItem() == "BDATE 순"){
-					order_by = " ORDER BY e.Bdate";
-				}
-
-				if (setSorting.getSelectedItem() == "SALARY 순"){
-					order_by = " ORDER BY e.Salary";
-				}
-			}
-
-			if (e.getSource() == setUpdateC) {
-				setUpdate.setVisible(false);
-				setUpdateSex.setVisible(false);
-
-				if (setUpdateC.getSelectedItem() == "Address")
-					setUpdate.setVisible(true);
-				if (setUpdateC.getSelectedItem() == "Salary")
-					setUpdate.setVisible(true);
-				if (setUpdateC.getSelectedItem() == "Sex")
-					setUpdateSex.setVisible(true);
-			}
-
-			// 검색 버튼 클릭시
-			if (e.getSource() == search_b) {
-				if (isTable) { // 테이블 초기화
-					boxSelectCnt.setText("");
-					del.remove(table_panel);
-					selectTotalCnt.setText("");
-
-					revalidate();
-				}
-
+			
+			//�˻� ��ư Ŭ����
+			if(e.getSource() == search_b) {
 				isSearch = true;
 				header.clear();
 				selectSearch(e);
 			}
-
-			if (e.getSource() == salary_up) {
-				if (isTable) { // 테이블 초기화
-					boxSelectCnt.setText("");
-					del.remove(table_panel);
-					selectTotalCnt.setText("");
-
-					revalidate();
-				}
-
-				header.clear();
-				selectSearch(e);
-				increaseSalary(e);
-
-			}
-
-			if (e.getSource() == del_b) {
-				if (isTable) { // 테이블 초기화
-					boxSelectCnt.setText("");
-					del.remove(table_panel);
-					selectTotalCnt.setText("");
-
-					revalidate();
-				}
-
-				if (isSearch == true)
-					selectDelete(e);
-				else
-					return;
-
-				// repaint을 위해서 다시 호출
+			
+			if(e.getSource() == del_b) {
+				if(isSearch == true) selectDelete(e);
+				else return;
+				
+				//repaint�� ���ؼ� �ٽ� ȣ��
 				header.clear();
 				selectSearch(e);
 			}
-
-			if (e.getSource() == setUpdateb) {
-				if (isTable) { // 테이블 초기화
-					boxSelectCnt.setText("");
-					del.remove(table_panel);
-					selectTotalCnt.setText("");
-
-					revalidate();
-				}
-
-				if (isSearch == true)
-					selectUpdate(e);
-				else
-					return;
-
-				// repaint을 위해서 다시 호출
-				header.clear();
-				selectSearch(e);
-			}
-
-			if (e.getSource() == knowDepent) {
-				if (isTable) { // 테이블 초기화
-					boxSelectCnt.setText("");
-					del.remove(table_panel);
-					selectTotalCnt.setText("");
-
-					revalidate();
-				}
-
+			
+			if(e.getSource() == setUpdateb) {
+				if(isSearch == true) selectUpdate(e);
+				else return;
+				
+				//repaint�� ���ؼ� �ٽ� ȣ��
 				header.clear();
 				selectSearch(e);
 				printDependent(e);
@@ -727,162 +605,9 @@ class PrintDependent extends JFrame {
 	private JPanel table_panel;
 	JScrollPane Sc;
 	private Container del = this;
-
-	private JButton search = new JButton("확인");
-
-	private Vector<String> header = new Vector();
-
-	private JPanel southP = new JPanel();
-
-	private Vector<String> ssn = new Vector();
-
-	PrintDependent(Vector<String> ssnI) {
-		setTitle("Dependent"); // 윈도우 제목 생성
-		setLayout(new BorderLayout());
-
-		for (Object s : ssnI) {
-			ssn.add((String) s);
-		}
-
-		Main getConn = new Main();
-		Connection conn = getConn.getConn();
-
-		String sql = "Select concat(e.Fname, ' ',e.Minit, ' ',e.Lname) as name, d.Dependent_name, d.Sex, d.Bdate, d.Relationship from employee as e, dependent as d where e.ssn = d.Essn and e.Ssn = ?";
-
-		// header 추가
-		header.add("Name");
-		header.add("dependent Name");
-		header.add("Sex");
-		header.add("Birth");
-		header.add("RelationShip");
-
-		model = new DefaultTableModel(header, 0) {
-			@Override
-			public boolean isCellEditable(int row, int column) {
-				if (column > 0) {
-					return false;
-				} else {
-					return true;
-				}
-			}
-		};
-
-		table = new JTable(model) {
-			@Override
-			public Class getColumnClass(int column) {
-				return String.class;
-			}
-		};
-
-		try {
-			PreparedStatement p = conn.prepareStatement(sql);
-			p.clearParameters();
-
-			for (Object s : ssn) {
-				p.clearParameters();
-				p.setString(1, (String) s);
-				ResultSet r = p.executeQuery();
-
-				while (r.next()) {
-					Vector<String> tmp = new Vector();
-					tmp.add(r.getString(1));
-					tmp.add(r.getString(2));
-					tmp.add(r.getString(3));
-					tmp.add(r.getString(4));
-					tmp.add(r.getString(5));
-					model.addRow(tmp);
-				}
-
-				table_panel = new JPanel();
-				Sc = new JScrollPane(table);
-				Sc.setPreferredSize(new Dimension(1000, 5000));
-				table_panel.add(Sc);
-				add(table_panel);
-				revalidate();
-			}
-
-		} catch (SQLException e1) {
-			e1.printStackTrace();
-			JOptionPane.showMessageDialog(null, e1.getMessage());
-		}
-
-		setSize(1000, 400);
-		setVisible(true);
-
-	}
-}
-
-class IncreaseSalary extends JFrame {
-	private final String selectD[] = { "Headquarters", "Administration", "Research" };
-	private JComboBox setSelectD = new JComboBox(selectD);
-
-	private JLabel increaseLabel = new JLabel("인상: ");
-	private JTextField increase = new JTextField(10);
-
-	private JButton b = new JButton("확인");
-
-	private JPanel select = new JPanel();
-	private JPanel texter = new JPanel();
-
-	IncreaseSalary() {
-		setTitle("Salary"); // 윈도우 제목 생성
-		setLayout(new BorderLayout());
-
-		select.add(setSelectD);
-		texter.add(increaseLabel);
-		texter.add(increase);
-		texter.add(b);
-
-		this.add(select, BorderLayout.NORTH);
-		this.add(texter, BorderLayout.CENTER);
-
-		setSize(300, 150);
-		setVisible(true);
-
-		InsertHandler handler = new InsertHandler();
-		b.addActionListener(handler);
-
-	}
-
-	private class InsertHandler implements ActionListener {
-
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if (e.getSource() == b) {
-				Main getConn = new Main();
-				Connection conn = getConn.getConn();
-
-				String sql = "Update Employee set salary = salary + ?, modified = CURRENT_TIMESTAMP() where Dno = (select dnumber from department where Dname = ?)";
-				try {
-					PreparedStatement p = conn.prepareStatement(sql);
-					p.clearParameters();
-
-					if (increase.getText().contentEquals(""))
-						p.setInt(1, 0);
-					else
-						p.setInt(1, Integer.parseInt(increase.getText()));
-
-					p.setString(2, (String) setSelectD.getSelectedItem());
-
-					int c = p.executeUpdate();
-					if (c > 0)
-						dispose();
-				} catch (SQLException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(null, e1.getMessage());
-				}
-			}
-
-		}
-
-	}
-}
-
-class InsertFrame extends JFrame {
-	private Container del = this;
-
-	private JLabel title = new JLabel("새로운 직원 정보 추가");
-
+	
+	private JLabel title = new JLabel("���ο� ���� ���� �߰�");
+	
 	private JLabel FnameL = new JLabel("First Name: ");
 	private JTextField Fname = new JTextField();
 
@@ -913,14 +638,14 @@ class InsertFrame extends JFrame {
 
 	private JLabel dnoL = new JLabel("Dno: ");
 	private JTextField dno = new JTextField();
-	private JButton b = new JButton("정보 추가하기");
-
+	private JButton b= new JButton("���� �߰��ϱ�");
+	
 	private JPanel top = new JPanel();
 	private JPanel button = new JPanel();
 	private JPanel bPanel = new JPanel();
 
 	public InsertFrame() {
-		setTitle("INSERT"); // 윈도우 제목 생성
+		setTitle("INSERT"); //������ ���� ����
 		setLayout(new BorderLayout());
 
 		top.setLayout(new BorderLayout());
