@@ -1,4 +1,5 @@
 import java.sql.*;
+import javax.swing.JOptionPane;
 
 public class Main {
 	private static Connection conn;
@@ -19,7 +20,8 @@ public class Main {
 			conn = getConnecting();
 			System.out.println("DataBase Connect!");
 		} catch (SQLException e1) { e1.printStackTrace(); 
-		JOptionPane.showMessageDialog(null, e1.getMessage());}
+		JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
 		
 		TableFrame t = new TableFrame();
 	}

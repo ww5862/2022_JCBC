@@ -25,6 +25,9 @@ public class EmployeeTable extends JPanel {
 	private JTextField selectSal = new JTextField(10);
 	private JTextField underline = new JTextField(15);
 
+	// hyein : 부서별 평균 월급
+	private JLabel dSalary = new JLabel("부서 평균 월급 : ");
+
 	private final String month[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
 	private JComboBox setMonth = new JComboBox(month);
 
@@ -71,6 +74,10 @@ public class EmployeeTable extends JPanel {
 	private final String updateSex[] = { "M", "F" };
 	private JComboBox setUpdateSex = new JComboBox(updateSex);
 
+	//hyein
+	private final String sorting[] = { "정렬 없음", "NAME 순", "SSN 순", "BDATE 순", "SALARY 순" };
+	private JComboBox setSorting = new JComboBox(sorting);
+
 	private JPanel updateMenu = new JPanel();
 	private JPanel southMenu = new JPanel();
 	private JPanel southMenuN = new JPanel();
@@ -80,6 +87,10 @@ public class EmployeeTable extends JPanel {
 	private JPanel selectMenuN = new JPanel();
 
 	private static Boolean isSearch = false;
+
+	//hyein
+	private Boolean search_as_dSalary = false;
+	private String order_by = "";
 
 	public EmployeeTable() {
 
@@ -94,6 +105,13 @@ public class EmployeeTable extends JPanel {
 		selectMenuN.add(selectD);
 		selectMenuN.add(setMonth);
 		selectMenuN.add(underline);
+
+		// hyein
+		selectMenuN.add(setSorting);
+		selectMenuN.add(dSalary);
+		
+		selectD.setVisible(false);
+		dSalary.setVisible(false);
 
 		// setSelectD.setVisible(false);
 		setSelectS.setVisible(false);
@@ -166,6 +184,9 @@ public class EmployeeTable extends JPanel {
 		salary_up.addActionListener(handler);
 		knowDepent.addActionListener(handler);
 
+		//hyein
+		setSorting.addActionListener(handler);
+
 	}
 
 	private class EmployeeTableHandler implements ActionListener {
@@ -183,6 +204,9 @@ public class EmployeeTable extends JPanel {
 			if (setSelectW.getSelectedItem() == "부서") {
 				// res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
 				res = " and Dname = '" + selectD.getText() + "'";
+				
+				//hyein
+				search_as_dSalary = true;
 			}
 
 			if (setSelectW.getSelectedItem() == "성별") {
@@ -282,6 +306,9 @@ public class EmployeeTable extends JPanel {
 
 				sql += "from employee e left outer join employee s on e.super_ssn=s.ssn, Department where e.Dno = Dnumber";
 				sql += selectWhere(e);
+				//hyein
+				sql += order_by;
+
 				System.out.println(sql);
 				try {
 					stmt = conn.createStatement();
@@ -321,6 +348,9 @@ public class EmployeeTable extends JPanel {
 				try {
 					rs = stmt.executeQuery(sql);
 					int cnt = 0;
+					//hyein
+					double salary_total = 0;
+
 					while (rs.next()) {
 						cnt++;
 						Vector tmp = new Vector();
@@ -335,8 +365,11 @@ public class EmployeeTable extends JPanel {
 							tmp.add(rs.getString("e.Address"));
 						if (sex_b.isSelected())
 							tmp.add(rs.getString("e.sex"));
-						if (salary_b.isSelected())
+						if (salary_b.isSelected()){
 							tmp.add(Double.toString(rs.getDouble("e.Salary")));
+							//hyein
+							salary_total += rs.getDouble("e.Salary");
+						}
 						if (supervisor_b.isSelected())
 							tmp.add(rs.getString("supervisor"));
 						if (department_b.isSelected())
@@ -344,6 +377,18 @@ public class EmployeeTable extends JPanel {
 
 						model.addRow(tmp);
 					}
+					
+
+					//hyein
+					if (search_as_dSalary) {
+						double salary_avg = salary_total/cnt;
+						dSalary.setText("부서 평균 월급 : "+Double.toString(salary_avg));
+					} else {
+						dSalary.setText("부서 평균 월급 : ");
+					}
+
+					search_as_dSalary = false;
+					
 
 					EmployeeTableHandler handler = new EmployeeTableHandler();
 					table.getModel().addTableModelListener(new TableEvent());
@@ -471,6 +516,8 @@ public class EmployeeTable extends JPanel {
 			if (e.getSource() == setSelectW) {
 				// setSelectD.setVisible(false);
 				selectD.setVisible(false);
+				// hyein
+				dSalary.setVisible(false);
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
@@ -479,19 +526,61 @@ public class EmployeeTable extends JPanel {
 				/*
 				 * if (setSelectW.getSelectedItem() == "부서") setSelectD.setVisible(true);
 				 */
-				if (setSelectW.getSelectedItem() == "부서")
+				if (setSelectW.getSelectedItem() == "부서"){
 					selectD.setVisible(true);
-				if (setSelectW.getSelectedItem() == "성별")
+					// hyein
+					dSalary.setVisible(true);
+				}
+					
+				if (setSelectW.getSelectedItem() == "성별"){
 					setSelectS.setVisible(true);
-				if (setSelectW.getSelectedItem() == "연봉")
+					// hyein
+					dSalary.setVisible(false);
+				}
+					
+				if (setSelectW.getSelectedItem() == "연봉"){
 					selectSal.setVisible(true);
-				if (setSelectW.getSelectedItem() == "생일")
+					// hyein
+					dSalary.setVisible(false);
+				}
+					
+				if (setSelectW.getSelectedItem() == "생일"){
 					setMonth.setVisible(true);
-				if (setSelectW.getSelectedItem() == "부하 직원")
+					// hyein
+					dSalary.setVisible(false);
+				}
+					
+				if (setSelectW.getSelectedItem() == "부하 직원"){
 					underline.setVisible(true);
+					// hyein
+					dSalary.setVisible(false);
+				}
 
 				revalidate();
 
+			}
+
+			//hyein
+			if (e.getSource() == setSorting) {
+				if (setSorting.getSelectedItem() == "정렬 없음"){
+					order_by = "";
+				} 
+
+				if (setSorting.getSelectedItem() == "NAME 순"){
+					order_by = " ORDER BY e.Fname";
+				}
+
+				if (setSorting.getSelectedItem() == "SSN 순"){
+					order_by = " ORDER BY e.Ssn";
+				}
+
+				if (setSorting.getSelectedItem() == "BDATE 순"){
+					order_by = " ORDER BY e.Bdate";
+				}
+
+				if (setSorting.getSelectedItem() == "SALARY 순"){
+					order_by = " ORDER BY e.Salary";
+				}
 			}
 
 			if (e.getSource() == setUpdateC) {
