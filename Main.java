@@ -18,7 +18,8 @@ public class Main {
 		try {
 			conn = getConnecting();
 			System.out.println("DataBase Connect!");
-		} catch (SQLException e1) { e1.printStackTrace(); }
+		} catch (SQLException e1) { e1.printStackTrace(); 
+		JOptionPane.showMessageDialog(null, e1.getMessage());}
 		
 		TableFrame t = new TableFrame();
 	}
