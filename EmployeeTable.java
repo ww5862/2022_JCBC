@@ -9,24 +9,26 @@ import java.util.Vector;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.TableModel;
 
-public class EmployeeTable extends JPanel{
-	
-	private final String selectW[] = {"¿¸√º", "∫Œº≠", "º∫∫∞", "ø¨∫¿", "ª˝¿œ" , "∫Œ«œ ¡˜ø¯"};
+public class EmployeeTable extends JPanel {
+
+	private final String selectW[] = { "Ï†ÑÏ≤¥", "Î∂ÄÏÑú", "ÏÑ±Î≥Ñ", "Ïó∞Î¥â", "ÏÉùÏùº", "Î∂ÄÌïò ÏßÅÏõê" };
 	private JComboBox setSelectW = new JComboBox(selectW);
-	
-	private final String selectD[] = {"Headquarters", "Administration", "Research"};
-	private JComboBox setSelectD = new JComboBox(selectD);
-	
-	private final String selectS[] = {"M", "F"};
+
+	// private final String selectD[] = { "Headquarters", "Administration",
+	// "Research" };
+	// private JComboBox setSelectD = new JComboBox(selectD);
+
+	private final String selectS[] = { "M", "F" };
 	private JComboBox setSelectS = new JComboBox(selectS);
-	
+
+	private JTextField selectD = new JTextField(20);
 	private JTextField selectSal = new JTextField(10);
 	private JTextField underline = new JTextField(15);
-	
-	private final String month[] = {"1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12"};
+
+	private final String month[] = { "1", "2", "3", "4", "5", "6", "7", "8", "9", "10", "11", "12" };
 	private JComboBox setMonth = new JComboBox(month);
-	
-	private JLabel label = new JLabel("∞Àªˆ «◊∏Ò");
+
+	private JLabel label = new JLabel("Í≤ÄÏÉâ Ìï≠Î™©");
 	private JCheckBox name_b = new JCheckBox("Name", true);
 	private JCheckBox ssn_b = new JCheckBox("Ssn", true);
 	private JCheckBox bdate_b = new JCheckBox("Bdate", true);
@@ -35,37 +37,40 @@ public class EmployeeTable extends JPanel{
 	private JCheckBox salary_b = new JCheckBox("Salary", true);
 	private JCheckBox supervisor_b = new JCheckBox("Supervisor", true);
 	private JCheckBox department_b = new JCheckBox("Department", true);
-	private JButton search_b = new JButton("∞Àªˆ");
-	private JButton insert_b = new JButton("√ﬂ∞°«œ±‚");
-	private JButton salary_up = new JButton("ø˘±ﬁ ¿ŒªÛ");
-	private JButton knowDepent = new JButton("∞°¡∑ »Æ¿Œ");
-	
+	private JButton search_b = new JButton("Í≤ÄÏÉâ");
+	private JButton insert_b = new JButton("Ï∂îÍ∞ÄÌïòÍ∏∞");
+	private JButton salary_up = new JButton("ÏõîÍ∏â Ïù∏ÏÉÅ");
+	private JButton knowDepent = new JButton("Í∞ÄÏ°± ÌôïÏù∏");
+
 	private Vector<String> header = new Vector<String>();
-	
+
 	private DefaultTableModel model;
 	private JTable table;
 	private JPanel table_panel;
 	JScrollPane Sc;
 	private Container del = this;
 	private boolean isTable = false;
-	
+
 	private int tableCnt;
-	
+
 	private Statement stmt;
 	private ResultSet rs;
-	
-	private JLabel selectTotalLabel = new JLabel("¿Œø¯ ºˆ: ");
-	private JLabel boxSelect = new JLabel("º±≈√«— ¡˜ø¯: ");
+
+	private JLabel selectTotalLabel = new JLabel("Ïù∏Ïõê Ïàò: ");
+	private JLabel boxSelect = new JLabel("ÏÑ†ÌÉùÌïú ÏßÅÏõê: ");
 	private JLabel selectTotalCnt = new JLabel(" ");
 	private JLabel boxSelectCnt = new JLabel(" ");
-	private JButton del_b =  new JButton("ªË¡¶");
-	
-	private static final String updateString[] = {"Address", "Sex", "Salary"};
-	private JLabel setUpdateL = new JLabel("ºˆ¡§:");
+	private JButton del_b = new JButton("ÏÇ≠Ï†ú");
+
+	private static final String updateString[] = { "Address", "Sex", "Salary" };
+	private JLabel setUpdateL = new JLabel("ÏàòÏ†ï:");
 	private JComboBox setUpdateC = new JComboBox(updateString);
-	private JTextField setUpdate = new JTextField(10);
+	private JTextField setUpdate = new JTextField(20);
 	private JButton setUpdateb = new JButton("Update");
-	
+
+	private final String updateSex[] = { "M", "F" };
+	private JComboBox setUpdateSex = new JComboBox(updateSex);
+
 	private JPanel updateMenu = new JPanel();
 	private JPanel southMenu = new JPanel();
 	private JPanel southMenuN = new JPanel();
@@ -73,30 +78,34 @@ public class EmployeeTable extends JPanel{
 	private JPanel selectMenu = new JPanel();
 	private JPanel selectMenuS = new JPanel();
 	private JPanel selectMenuN = new JPanel();
-	
+
 	private static Boolean isSearch = false;
-	
+
 	public EmployeeTable() {
-		
+
 		setLayout(new BorderLayout());
-		
+
 		selectMenu.setLayout(new BorderLayout());
-		
+
 		selectMenuN.add(setSelectW);
-		selectMenuN.add(setSelectD);
+		// selectMenuN.add(setSelectD);
 		selectMenuN.add(setSelectS);
 		selectMenuN.add(selectSal);
+		selectMenuN.add(selectD);
 		selectMenuN.add(setMonth);
 		selectMenuN.add(underline);
-		
-		setSelectD.setVisible(false);
+
+		// setSelectD.setVisible(false);
 		setSelectS.setVisible(false);
 		selectSal.setVisible(false);
 		setMonth.setVisible(false);
 		underline.setVisible(false);
-		
+
+		setUpdate.setVisible(true);
+		setUpdateSex.setVisible(false);
+
 		selectMenu.add(selectMenuN, BorderLayout.NORTH);
-		
+
 		selectMenuS.add(label);
 		selectMenuS.add(name_b);
 		selectMenuS.add(ssn_b);
@@ -111,438 +120,553 @@ public class EmployeeTable extends JPanel{
 		selectMenuS.add(salary_up);
 		selectMenuS.add(knowDepent);
 		selectMenu.add(selectMenuS, BorderLayout.SOUTH);
-		
+
 		this.add(selectMenu, BorderLayout.NORTH);
-		
-		// πÿ¿« ∏ﬁ¥∫
+
+		// Î∞ëÏùò Î©îÎâ¥
 		southMenu.setLayout(new BorderLayout());
 		southMenu.setPreferredSize(new Dimension(1000, 65));
-		
+
 		southMenuN.setLayout(new BorderLayout());
 		southMenuS.setLayout(new BorderLayout());
-		
+
 		southMenuN.add(boxSelect, BorderLayout.WEST);
 		southMenuN.add(boxSelectCnt);
 		southMenu.add(southMenuN, BorderLayout.NORTH);
-		
+
 		JPanel southMenuSW = new JPanel();
 		southMenuSW.add(selectTotalLabel);
 		southMenuSW.add(selectTotalCnt);
-		
+
 		southMenuS.add(southMenuSW, BorderLayout.WEST);
-		
+
 		southMenuS.add(del_b, BorderLayout.EAST);
-		
-		
+
 		updateMenu.add(setUpdateL);
 		updateMenu.add(setUpdateC);
 		updateMenu.add(setUpdate);
+		updateMenu.add(setUpdateSex);
 		updateMenu.add(setUpdateb);
-		
+
 		updateMenu.setPreferredSize(new Dimension(10, 10));
-		
+
 		southMenuS.add(updateMenu, BorderLayout.CENTER);
 		southMenu.add(southMenuN, BorderLayout.NORTH);
 		southMenu.add(southMenuS, BorderLayout.SOUTH);
-		
-		
+
 		this.add(southMenu, BorderLayout.SOUTH);
-		
+
 		EmployeeTableHandler handler = new EmployeeTableHandler();
 		setSelectW.addActionListener(handler);
+		setUpdateC.addActionListener(handler);
 		search_b.addActionListener(handler);
 		del_b.addActionListener(handler);
 		setUpdateb.addActionListener(handler);
 		insert_b.addActionListener(handler);
 		salary_up.addActionListener(handler);
 		knowDepent.addActionListener(handler);
-		
+
 	}
-	
-	private class EmployeeTableHandler implements ActionListener{
-		
+
+	private class EmployeeTableHandler implements ActionListener {
+
 		private String selectWhere(ActionEvent e) {
 			String res = "";
 			/*
-			selectMenuN.add(setSelectD);
-			selectMenuN.add(setSelectS);
-			selectMenuN.add(selectSal);
-			selectMenuN.add(setMonth);
+			 * selectMenuN.add(setSelectD); selectMenuN.add(setSelectS);
+			 * selectMenuN.add(selectSal); selectMenuN.add(setMonth);
 			 */
-			
-			if(setSelectW.getSelectedItem() == "¿¸√º") return "";
-			
-			if(setSelectW.getSelectedItem() == "∫Œº≠") {
-				res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
-				
+
+			if (setSelectW.getSelectedItem() == "Ï†ÑÏ≤¥")
+				return "";
+
+			if (setSelectW.getSelectedItem() == "Î∂ÄÏÑú") {
+				// res = " and Dname = '" + setSelectD.getSelectedItem() + "'";
+				res = " and Dname = '" + selectD.getText() + "'";
 			}
-			
-			if(setSelectW.getSelectedItem() == "º∫∫∞") {
+
+			if (setSelectW.getSelectedItem() == "ÏÑ±Î≥Ñ") {
 				res = " and e.Sex = '" + setSelectS.getSelectedItem() + "'";
 			}
-			
-			if(setSelectW.getSelectedItem() == "ø¨∫¿") {
+
+			if (setSelectW.getSelectedItem() == "Ïó∞Î¥â") {
 				res = " and e.Salary >= " + selectSal.getText();
 			}
-			
-			if(setSelectW.getSelectedItem() == "ª˝¿œ") {
+
+			if (setSelectW.getSelectedItem() == "ÏÉùÏùº") {
 				res = " and Month(e.Bdate) = " + setMonth.getSelectedItem();
 			}
-			if(setSelectW.getSelectedItem() == "∫Œ«œ ¡˜ø¯") {
+			if (setSelectW.getSelectedItem() == "Î∂ÄÌïò ÏßÅÏõê") {
 				res = " and concat(s.Fname, ' ',s. Minit, ' ', s.Lname) = '" + underline.getText() + "'";
 			}
-			
+
 			return res;
 		}
-		
+
 		private void selectSearch(ActionEvent e) {
-			if(name_b.isSelected() || ssn_b.isSelected() || bdate_b.isSelected() || address_b.isSelected() ||
-					   sex_b.isSelected() || salary_b.isSelected() || supervisor_b.isSelected() || department_b.isSelected()) { // º±≈√¿ª «“ Ω√ø°∏∏ ∞Àªˆ¿ª «—¥Ÿ.
-				//sql conn »£√‚
+			if (name_b.isSelected() || ssn_b.isSelected() || bdate_b.isSelected() || address_b.isSelected()
+					|| sex_b.isSelected() || salary_b.isSelected() || supervisor_b.isSelected()
+					|| department_b.isSelected()) { // ÏÑ†ÌÉùÏùÑ Ìï† ÏãúÏóêÎßå Í≤ÄÏÉâÏùÑ ÌïúÎã§.
+				// sql conn Ìò∏Ï∂ú
 				Main getConn = new Main();
 				Connection conn = getConn.getConn();
 				String sql = "select ";
-				
-				//Header √§øÏ±‚
-				header.add("º±≈√");
-						
-				if(name_b.isSelected()) {
-					if(!ssn_b.isSelected() && !bdate_b.isSelected() && !address_b.isSelected() &&
-					!sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())  sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name ";
-					else sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name, ";
+
+				// Header Ï±ÑÏö∞Í∏∞
+				header.add("ÏÑ†ÌÉù");
+
+				if (name_b.isSelected()) {
+					if (!ssn_b.isSelected() && !bdate_b.isSelected() && !address_b.isSelected() && !sex_b.isSelected()
+							&& !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())
+						sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name ";
+					else
+						sql += "concat(e.Fname, ' ',e. Minit, ' ',e. Lname) as name, ";
 					header.add("Name");
-					}
-						
-					if(ssn_b.isSelected()) {
-						if(!bdate_b.isSelected() && !address_b.isSelected() &&!sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected()) sql += "e.Ssn ";
-						else sql += "e.Ssn, ";
-						header.add("SSN");
-					}
-						
-					if(bdate_b.isSelected()) {
-						if(!address_b.isSelected() && !sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected()) sql += "e.Bdate ";
-						else sql += "e.Bdate, ";
-						header.add("BDATE");
-					}
-						
-					if(address_b.isSelected()) {
-						if(!sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected()) sql += "e.Address ";
-						else sql += "e.Address, ";
-						header.add("ADDRESS");
-					}
-						
-					if(sex_b.isSelected()) {
-						if(!salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected()) sql += "e.Sex ";
-						else sql += "e.Sex, ";
-						header.add("SEX");
-					}
-						
-					if(salary_b.isSelected()) {
-						if(!supervisor_b.isSelected() && !department_b.isSelected()) sql += "e.Salary ";
-						else sql += "e.Salary, ";
-						header.add("Salary");
-					}
-						
-					if(supervisor_b.isSelected()) {
-						if(!department_b.isSelected()) sql += "concat(s.Fname, ' ',s. Minit, ' ', s.Lname) as supervisor ";
-						else sql += "concat(s.Fname, ' ',s. Minit, ' ', s.Lname) as supervisor, ";
-						header.add("SUPERVISOR");
-					}
-						
-					if(department_b.isSelected()) {
-						sql += "Dname ";
-						header.add("DEPARTMENT");
-					}
-						
-					sql += "from employee e left outer join employee s on e.super_ssn=s.ssn, Department where e.Dno = Dnumber";
-					sql += selectWhere(e);
-					System.out.println(sql);
-					try {
-						stmt = conn.createStatement();
-					}catch (SQLException e1) { e1.printStackTrace(); }
-					
-					model = new DefaultTableModel(header, 0) {
-						@Override
-						public boolean isCellEditable(int row, int column) {
-							if (column > 0) {
-								return false;
-							} else {
-								return true;
-							}
+				}
+
+				if (ssn_b.isSelected()) {
+					if (!bdate_b.isSelected() && !address_b.isSelected() && !sex_b.isSelected()
+							&& !salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())
+						sql += "e.Ssn ";
+					else
+						sql += "e.Ssn, ";
+					header.add("SSN");
+				}
+
+				if (bdate_b.isSelected()) {
+					if (!address_b.isSelected() && !sex_b.isSelected() && !salary_b.isSelected()
+							&& !supervisor_b.isSelected() && !department_b.isSelected())
+						sql += "e.Bdate ";
+					else
+						sql += "e.Bdate, ";
+					header.add("BDATE");
+				}
+
+				if (address_b.isSelected()) {
+					if (!sex_b.isSelected() && !salary_b.isSelected() && !supervisor_b.isSelected()
+							&& !department_b.isSelected())
+						sql += "e.Address ";
+					else
+						sql += "e.Address, ";
+					header.add("ADDRESS");
+				}
+
+				if (sex_b.isSelected()) {
+					if (!salary_b.isSelected() && !supervisor_b.isSelected() && !department_b.isSelected())
+						sql += "e.Sex ";
+					else
+						sql += "e.Sex, ";
+					header.add("SEX");
+				}
+
+				if (salary_b.isSelected()) {
+					if (!supervisor_b.isSelected() && !department_b.isSelected())
+						sql += "e.Salary ";
+					else
+						sql += "e.Salary, ";
+					header.add("Salary");
+				}
+
+				if (supervisor_b.isSelected()) {
+					if (!department_b.isSelected())
+						sql += "concat(s.Fname, ' ',s. Minit, ' ', s.Lname) as supervisor ";
+					else
+						sql += "concat(s.Fname, ' ',s. Minit, ' ', s.Lname) as supervisor, ";
+					header.add("SUPERVISOR");
+				}
+
+				if (department_b.isSelected()) {
+					sql += "Dname ";
+					header.add("DEPARTMENT");
+				}
+
+				sql += "from employee e left outer join employee s on e.super_ssn=s.ssn, Department where e.Dno = Dnumber";
+				sql += selectWhere(e);
+				System.out.println(sql);
+				try {
+					stmt = conn.createStatement();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
+
+				model = new DefaultTableModel(header, 0) {
+					@Override
+					public boolean isCellEditable(int row, int column) {
+						if (column > 0) {
+							return false;
+						} else {
+							return true;
 						}
-					};
-					
-					table = new JTable(model) {
-						@Override
-						public Class getColumnClass(int column) {
-							if (column == 0) {
-								return Boolean.class;
-							} else
-								return String.class;
-						}
-					};
-					
-					try {
-						stmt = conn.createStatement();
-					}catch(SQLException e1) {e1.printStackTrace();}
-					
-					try {
-						rs = stmt.executeQuery(sql);
-						int cnt = 0;
-						while(rs.next()) {
-							cnt++;
-							Vector tmp = new Vector();
-							tmp.add(false);
-							if(name_b.isSelected()) tmp.add(rs.getString("name"));
-							if(ssn_b.isSelected()) tmp.add(rs.getString("e.ssn"));
-							if(bdate_b.isSelected()) tmp.add(rs.getString("e.bdate"));
-							if(address_b.isSelected()) tmp.add(rs.getString("e.Address"));
-							if(sex_b.isSelected()) tmp.add(rs.getString("e.sex"));
-							if(salary_b.isSelected()) tmp.add(Double.toString(rs.getDouble("e.Salary")));
-							if(supervisor_b.isSelected()) tmp.add(rs.getString("supervisor"));
-							if(department_b.isSelected()) tmp.add(rs.getString("Dname"));
-							
-							model.addRow(tmp);
-						}
-						
-						EmployeeTableHandler handler = new EmployeeTableHandler();
-						table.getModel().addTableModelListener(new TableEvent());
-						
-						selectTotalCnt.setText(""+ cnt);
-						table.setRowHeight(30);
-						isTable = true;
-						table_panel = new JPanel();
-						Sc = new JScrollPane(table);
-						Sc.setPreferredSize(new Dimension(1000, 400));
-						table_panel.add(Sc);
-						
-						add(table_panel);
-						revalidate();
-						
-					}catch(SQLException e1) {e1.printStackTrace();}
-			}// end if
-			
+					}
+				};
+
+				table = new JTable(model) {
+					@Override
+					public Class getColumnClass(int column) {
+						if (column == 0) {
+							return Boolean.class;
+						} else
+							return String.class;
+					}
+				};
+
+				try {
+					stmt = conn.createStatement();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
+
+				try {
+					rs = stmt.executeQuery(sql);
+					int cnt = 0;
+					while (rs.next()) {
+						cnt++;
+						Vector tmp = new Vector();
+						tmp.add(false);
+						if (name_b.isSelected())
+							tmp.add(rs.getString("name"));
+						if (ssn_b.isSelected())
+							tmp.add(rs.getString("e.ssn"));
+						if (bdate_b.isSelected())
+							tmp.add(rs.getString("e.bdate"));
+						if (address_b.isSelected())
+							tmp.add(rs.getString("e.Address"));
+						if (sex_b.isSelected())
+							tmp.add(rs.getString("e.sex"));
+						if (salary_b.isSelected())
+							tmp.add(Double.toString(rs.getDouble("e.Salary")));
+						if (supervisor_b.isSelected())
+							tmp.add(rs.getString("supervisor"));
+						if (department_b.isSelected())
+							tmp.add(rs.getString("Dname"));
+
+						model.addRow(tmp);
+					}
+
+					EmployeeTableHandler handler = new EmployeeTableHandler();
+					table.getModel().addTableModelListener(new TableEvent());
+
+					selectTotalCnt.setText("" + cnt);
+					table.setRowHeight(30);
+					isTable = true;
+					table_panel = new JPanel();
+					Sc = new JScrollPane(table);
+					Sc.setPreferredSize(new Dimension(1000, 400));
+					table_panel.add(Sc);
+
+					add(table_panel);
+					revalidate();
+
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
+			} // end if
+
 		}// end function
-		
+
 		private void selectDelete(ActionEvent e) {
 			int ssnLoc = 1;
 			String colName = model.getColumnName(ssnLoc);
-			if(colName != "SSN") colName = model.getColumnName(++ssnLoc);
-			if(colName != "SSN") return;
-			
+			if (colName != "SSN")
+				colName = model.getColumnName(++ssnLoc);
+			if (colName != "SSN")
+				return;
+
 			Vector<String> arrSsn = new Vector<String>();
-			for(int i= 0; i < table.getRowCount(); i++) {
-				if(table.getValueAt(i, 0) == Boolean.TRUE) arrSsn.add((String)table.getValueAt(i, ssnLoc));
+			for (int i = 0; i < table.getRowCount(); i++) {
+				if (table.getValueAt(i, 0) == Boolean.TRUE)
+					arrSsn.add((String) table.getValueAt(i, ssnLoc));
 			}
 			Main getConn = new Main();
 			Connection conn = getConn.getConn();
-			
+
 			String sql = "delete from employee where Ssn = ?";
 			try {
 				PreparedStatement p = conn.prepareStatement(sql);
 				p.clearParameters();
-				
-				for(Object a: arrSsn) {
+
+				for (Object a : arrSsn) {
 					p.clearParameters();
 					p.setString(1, (String) a);
 					p.executeUpdate();
 				}
-				
-			} catch(SQLException e1) {e1.printStackTrace();}
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			}
 		}
-		
+
 		private void selectUpdate(ActionEvent e) {
 			int ssnLoc = 1;
 			String colName = model.getColumnName(ssnLoc);
-			if(colName != "SSN") colName = model.getColumnName(++ssnLoc);
-			if(colName != "SSN") return;
-			
+			if (colName != "SSN")
+				colName = model.getColumnName(++ssnLoc);
+			if (colName != "SSN")
+				return;
+
 			Vector<String> arrSsn = new Vector<String>();
-			for(int i= 0; i < table.getRowCount(); i++) {
-				if(table.getValueAt(i, 0) == Boolean.TRUE) arrSsn.add((String)table.getValueAt(i, ssnLoc));
+			for (int i = 0; i < table.getRowCount(); i++) {
+				if (table.getValueAt(i, 0) == Boolean.TRUE)
+					arrSsn.add((String) table.getValueAt(i, ssnLoc));
 			}
 			Main getConn = new Main();
 			Connection conn = getConn.getConn();
-			
-			String sql = "Update EMPLOYEE set " + setUpdateC.getSelectedItem() + " = ? , modified = CURRENT_TIMESTAMP() where Ssn = ?";
-			
+
+			String sql = "Update EMPLOYEE set " + setUpdateC.getSelectedItem()
+					+ " = ? , modified = CURRENT_TIMESTAMP() where Ssn = ?";
+
 			try {
 				PreparedStatement p = conn.prepareStatement(sql);
 				p.clearParameters();
-				
-				for(Object a: arrSsn) {
-					if(setUpdateC.getSelectedItem() == "Salary") p.setDouble(1, Double.parseDouble(setUpdate.getText()));
-					else p.setString(1, (String)setUpdate.getText());
-					p.setString(2, (String)a);
+
+				for (Object a : arrSsn) {
+					if (setUpdateC.getSelectedItem() == "Salary")
+						p.setDouble(1, Double.parseDouble(setUpdate.getText()));
+					else if (setUpdateC.getSelectedItem() == "Sex") {
+						p.setString(1, (String) setUpdateSex.getSelectedItem());
+					} else
+						p.setString(1, (String) setUpdate.getText());
+					p.setString(2, (String) a);
 					p.executeUpdate();
 				}
-				
-			} catch(SQLException e1) {e1.printStackTrace();}
-			
-			
-			
+
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, e1.getMessage());
+			}
+
 		}
-		
+
 		private void selectInsert(ActionEvent e) {
 			InsertFrame a = new InsertFrame();
 		}
-		
+
 		private void increaseSalary(ActionEvent e) {
 			IncreaseSalary a = new IncreaseSalary();
 		}
-		
+
 		private void printDependent(ActionEvent e) {
 			int ssnLoc = 1;
 			String colName = model.getColumnName(ssnLoc);
-			if(colName != "SSN") colName = model.getColumnName(++ssnLoc);
-			if(colName != "SSN") return;
-			
+			if (colName != "SSN")
+				colName = model.getColumnName(++ssnLoc);
+			if (colName != "SSN")
+				return;
+
 			Vector<String> arrSsn = new Vector<String>();
-			for(int i= 0; i < table.getRowCount(); i++) {
-				arrSsn.add((String)table.getValueAt(i, ssnLoc));
+			for (int i = 0; i < table.getRowCount(); i++) {
+				arrSsn.add((String) table.getValueAt(i, ssnLoc));
 			}
 			PrintDependent a = new PrintDependent(arrSsn);
-			//here to
+			// here to
 		}
-		
+
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(isTable) { // ≈◊¿Ã∫Ì √ ±‚»≠
-				boxSelectCnt.setText("");
-				del.remove(table_panel);
-				selectTotalCnt.setText("");
-				
-				revalidate();
-			}
-			
-			//∞Àªˆ∞™
-			if(e.getSource() == setSelectW) {
-				setSelectD.setVisible(false);
+			// Í≤ÄÏÉâÍ∞í
+			if (e.getSource() == setSelectW) {
+				// setSelectD.setVisible(false);
+				selectD.setVisible(false);
 				setSelectS.setVisible(false);
 				selectSal.setVisible(false);
 				setMonth.setVisible(false);
 				underline.setVisible(false);
-				
-				if(setSelectW.getSelectedItem() == "∫Œº≠") setSelectD.setVisible(true);
-				if(setSelectW.getSelectedItem() == "º∫∫∞") setSelectS.setVisible(true);
-				if(setSelectW.getSelectedItem() == "ø¨∫¿") selectSal.setVisible(true);
-				if(setSelectW.getSelectedItem() == "ª˝¿œ") setMonth.setVisible(true);
-				if(setSelectW.getSelectedItem() == "∫Œ«œ ¡˜ø¯")underline.setVisible(true);
-				
+
+				/*
+				 * if (setSelectW.getSelectedItem() == "Î∂ÄÏÑú") setSelectD.setVisible(true);
+				 */
+				if (setSelectW.getSelectedItem() == "Î∂ÄÏÑú")
+					selectD.setVisible(true);
+				if (setSelectW.getSelectedItem() == "ÏÑ±Î≥Ñ")
+					setSelectS.setVisible(true);
+				if (setSelectW.getSelectedItem() == "Ïó∞Î¥â")
+					selectSal.setVisible(true);
+				if (setSelectW.getSelectedItem() == "ÏÉùÏùº")
+					setMonth.setVisible(true);
+				if (setSelectW.getSelectedItem() == "Î∂ÄÌïò ÏßÅÏõê")
+					underline.setVisible(true);
+
 				revalidate();
-				
+
 			}
-			
-			//∞Àªˆ πˆ∆∞ ≈¨∏ØΩ√
-			if(e.getSource() == search_b) {
+
+			if (e.getSource() == setUpdateC) {
+				setUpdate.setVisible(false);
+				setUpdateSex.setVisible(false);
+
+				if (setUpdateC.getSelectedItem() == "Address")
+					setUpdate.setVisible(true);
+				if (setUpdateC.getSelectedItem() == "Salary")
+					setUpdate.setVisible(true);
+				if (setUpdateC.getSelectedItem() == "Sex")
+					setUpdateSex.setVisible(true);
+			}
+
+			// Í≤ÄÏÉâ Î≤ÑÌäº ÌÅ¥Î¶≠Ïãú
+			if (e.getSource() == search_b) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
 				isSearch = true;
 				header.clear();
 				selectSearch(e);
 			}
-			
-			if(e.getSource() == salary_up) {
+
+			if (e.getSource() == salary_up) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
 				header.clear();
 				selectSearch(e);
 				increaseSalary(e);
-				
+
 			}
-			
-			if(e.getSource() == del_b) {
-				if(isSearch == true) selectDelete(e);
-				else return;
-				
-				//repaint¿ª ¿ß«ÿº≠ ¥ŸΩ√ »£√‚
+
+			if (e.getSource() == del_b) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
+				if (isSearch == true)
+					selectDelete(e);
+				else
+					return;
+
+				// repaintÏùÑ ÏúÑÌï¥ÏÑú Îã§Ïãú Ìò∏Ï∂ú
 				header.clear();
 				selectSearch(e);
 			}
-			
-			if(e.getSource() == setUpdateb) {
-				if(isSearch == true) selectUpdate(e);
-				else return;
-				
-				//repaint¿ª ¿ß«ÿº≠ ¥ŸΩ√ »£√‚
+
+			if (e.getSource() == setUpdateb) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
+				if (isSearch == true)
+					selectUpdate(e);
+				else
+					return;
+
+				// repaintÏùÑ ÏúÑÌï¥ÏÑú Îã§Ïãú Ìò∏Ï∂ú
 				header.clear();
 				selectSearch(e);
 			}
-			
-			if(e.getSource() == knowDepent) {
+
+			if (e.getSource() == knowDepent) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
 				header.clear();
 				selectSearch(e);
 				printDependent(e);
 			}
-			
-			if(e.getSource() == insert_b) {
+
+			if (e.getSource() == insert_b) {
+				if (isTable) { // ÌÖåÏù¥Î∏î Ï¥àÍ∏∞Ìôî
+					boxSelectCnt.setText("");
+					del.remove(table_panel);
+					selectTotalCnt.setText("");
+
+					revalidate();
+				}
+
 				selectInsert(e);
-				
+
 				header.clear();
 				selectSearch(e);
 				repaint();
 			}
-		} //end actionPerform function
-		
+		} // end actionPerform function
+
 	}// end private class
-	
+
 	public class TableEvent implements TableModelListener {
 		@Override
 		public void tableChanged(TableModelEvent e) {
 			int row = e.getFirstRow();
 			int col = e.getColumn();
-			
-			if(col == 0) {
+
+			if (col == 0) {
 				TableModel model = (TableModel) e.getSource();
 				String columnName = model.getColumnName(1);
-				Boolean checked = (Boolean) model.getValueAt(row,  col);
-				
+				Boolean checked = (Boolean) model.getValueAt(row, col);
+
 				String output = "";
-				for(int i = 0; i < table.getRowCount(); i++) {
-					if(table.getValueAt(i, 0) == Boolean.TRUE) output += (String)table.getValueAt(i, 1) + " ";
-				}// end for
-				
+				for (int i = 0; i < table.getRowCount(); i++) {
+					if (table.getValueAt(i, 0) == Boolean.TRUE)
+						output += (String) table.getValueAt(i, 1) + " ";
+				} // end for
+
 				boxSelectCnt.setText(output);
-			}// end if
+			} // end if
 		}// end function
 	}
-	
-	
+
 }// end class
 
 //here to code
-class PrintDependent extends JFrame{
+class PrintDependent extends JFrame {
 	private DefaultTableModel model;
 	private JTable table;
 	private JPanel table_panel;
 	JScrollPane Sc;
 	private Container del = this;
-	
-	private JButton search = new JButton("»Æ¿Œ");
-	
+
+	private JButton search = new JButton("ÌôïÏù∏");
+
 	private Vector<String> header = new Vector();
-	
+
 	private JPanel southP = new JPanel();
-	
+
 	private Vector<String> ssn = new Vector();
-	
-	
-	PrintDependent(Vector<String> ssnI){
-		setTitle("Dependent"); //¿©µµøÏ ¡¶∏Ò ª˝º∫
+
+	PrintDependent(Vector<String> ssnI) {
+		setTitle("Dependent"); // ÏúàÎèÑÏö∞ Ï†úÎ™© ÏÉùÏÑ±
 		setLayout(new BorderLayout());
-		
-		for(Object s: ssnI) {
-			ssn.add((String)s);
+
+		for (Object s : ssnI) {
+			ssn.add((String) s);
 		}
-		
+
 		Main getConn = new Main();
 		Connection conn = getConn.getConn();
-		
+
 		String sql = "Select concat(e.Fname, ' ',e.Minit, ' ',e.Lname) as name, d.Dependent_name, d.Sex, d.Bdate, d.Relationship from employee as e, dependent as d where e.ssn = d.Essn and e.Ssn = ?";
-		
-		//header √ﬂ∞°
+
+		// header Ï∂îÍ∞Ä
 		header.add("Name");
 		header.add("dependent Name");
 		header.add("Sex");
 		header.add("Birth");
 		header.add("RelationShip");
-		
+
 		model = new DefaultTableModel(header, 0) {
 			@Override
 			public boolean isCellEditable(int row, int column) {
@@ -553,24 +677,24 @@ class PrintDependent extends JFrame{
 				}
 			}
 		};
-		
+
 		table = new JTable(model) {
 			@Override
 			public Class getColumnClass(int column) {
-					return String.class;
+				return String.class;
 			}
 		};
-		
+
 		try {
 			PreparedStatement p = conn.prepareStatement(sql);
 			p.clearParameters();
-			
-			for(Object s: ssn) {
+
+			for (Object s : ssn) {
 				p.clearParameters();
-				p.setString(1, (String)s);
+				p.setString(1, (String) s);
 				ResultSet r = p.executeQuery();
-				
-				while(r.next()) {
+
+				while (r.next()) {
 					Vector<String> tmp = new Vector();
 					tmp.add(r.getString(1));
 					tmp.add(r.getString(2));
@@ -579,7 +703,7 @@ class PrintDependent extends JFrame{
 					tmp.add(r.getString(5));
 					model.addRow(tmp);
 				}
-				
+
 				table_panel = new JPanel();
 				Sc = new JScrollPane(table);
 				Sc.setPreferredSize(new Dimension(1000, 5000));
@@ -587,266 +711,209 @@ class PrintDependent extends JFrame{
 				add(table_panel);
 				revalidate();
 			}
-			
-			
-		}catch(SQLException e1) {e1.printStackTrace();}
-		
+
+		} catch (SQLException e1) {
+			e1.printStackTrace();
+			JOptionPane.showMessageDialog(null, e1.getMessage());
+		}
+
 		setSize(1000, 400);
 		setVisible(true);
-		
-		
-	}
-	
-	private class EmployeeTableHandler implements ActionListener{
-		private void selectSearch(ActionEvent e) {
-			Main getConn = new Main();
-			Connection conn = getConn.getConn();
-			
-			String sql = "Select concat(e.Fname, ' ',e.Minit, ' ',e.Lname) as name, d.Dependent_name, d.Sex, d.Bdate, d.Relationship from employee as e, dependent as d where e.ssn = d.Essn and e.Ssn = ?";
-			
-			//header √ﬂ∞°
-			header.add("Name");
-			header.add("dependent Name");
-			header.add("Sex");
-			header.add("Birth");
-			header.add("RelationShip");
-			
-			model = new DefaultTableModel(header, 0) {
-				@Override
-				public boolean isCellEditable(int row, int column) {
-					if (column > 0) {
-						return false;
-					} else {
-						return true;
-					}
-				}
-			};
-			
-			table = new JTable(model) {
-				@Override
-				public Class getColumnClass(int column) {
-						return String.class;
-				}
-			};
-			
-			try {
-				PreparedStatement p = conn.prepareStatement(sql);
-				p.clearParameters();
-				
-				for(Object s: ssn) {
-					p.clearParameters();
-					p.setString(1, (String)s);
-					ResultSet r = p.executeQuery();
-					
-					while(r.next()) {
-						Vector<String> tmp = new Vector();
-						tmp.add(r.getString(1));
-						tmp.add(r.getString(2));
-						tmp.add(r.getString(3));
-						tmp.add(r.getString(4));
-						tmp.add(r.getString(5));
-						model.addRow(tmp);
-					}
-					
-					table_panel = new JPanel();
-					Sc = new JScrollPane(table);
-					Sc.setPreferredSize(new Dimension(1000, 400));
-					table_panel.add(Sc);
-					add(table_panel);
-					revalidate();
-				}
-				
-				
-			}catch(SQLException e1) {e1.printStackTrace();}
-			
-		}
-		
-		@Override
-		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == search) selectSearch(e);
-			
-		}
-		
+
 	}
 }
 
-class IncreaseSalary extends JFrame{
-	private final String selectD[] = {"Headquarters", "Administration", "Research"};
+class IncreaseSalary extends JFrame {
+	private final String selectD[] = { "Headquarters", "Administration", "Research" };
 	private JComboBox setSelectD = new JComboBox(selectD);
-	
-	private JLabel increaseLabel = new JLabel("¿ŒªÛ: ");
+
+	private JLabel increaseLabel = new JLabel("Ïù∏ÏÉÅ: ");
 	private JTextField increase = new JTextField(10);
-	
-	private JButton b = new JButton("»Æ¿Œ");
-	
+
+	private JButton b = new JButton("ÌôïÏù∏");
+
 	private JPanel select = new JPanel();
 	private JPanel texter = new JPanel();
-	
-	IncreaseSalary(){
-		setTitle("Salary"); //¿©µµøÏ ¡¶∏Ò ª˝º∫
+
+	IncreaseSalary() {
+		setTitle("Salary"); // ÏúàÎèÑÏö∞ Ï†úÎ™© ÏÉùÏÑ±
 		setLayout(new BorderLayout());
-		
+
 		select.add(setSelectD);
 		texter.add(increaseLabel);
 		texter.add(increase);
 		texter.add(b);
-		
+
 		this.add(select, BorderLayout.NORTH);
 		this.add(texter, BorderLayout.CENTER);
-		
-		
+
 		setSize(300, 150);
 		setVisible(true);
-		
+
 		InsertHandler handler = new InsertHandler();
 		b.addActionListener(handler);
-		
+
 	}
-	
-	private class InsertHandler implements ActionListener{
+
+	private class InsertHandler implements ActionListener {
 
 		@Override
 		public void actionPerformed(ActionEvent e) {
-			if(e.getSource() == b) {
+			if (e.getSource() == b) {
 				Main getConn = new Main();
 				Connection conn = getConn.getConn();
-				
-				String sql = "Update Employee set salary = salary + ? where Dno = (select dnumber from department where Dname = ?)";
+
+				String sql = "Update Employee set salary = salary + ?, modified = CURRENT_TIMESTAMP() where Dno = (select dnumber from department where Dname = ?)";
 				try {
 					PreparedStatement p = conn.prepareStatement(sql);
 					p.clearParameters();
-					
-					if(increase.getText().contentEquals("")) p.setInt(1, 0);
-					else p.setInt(1, Integer.parseInt(increase.getText()));
-					
-					p.setString(2, (String)setSelectD.getSelectedItem());
-					
+
+					if (increase.getText().contentEquals(""))
+						p.setInt(1, 0);
+					else
+						p.setInt(1, Integer.parseInt(increase.getText()));
+
+					p.setString(2, (String) setSelectD.getSelectedItem());
+
 					int c = p.executeUpdate();
-					if(c > 0) dispose();
-				} catch(SQLException e1) {e1.printStackTrace(); JOptionPane.showMessageDialog(null, "¥ŸΩ√ ¿‘∑¬«œººø‰.");}
+					if (c > 0)
+						dispose();
+				} catch (SQLException e1) {
+					e1.printStackTrace();
+					JOptionPane.showMessageDialog(null, e1.getMessage());
+				}
 			}
-			
+
 		}
-		
+
 	}
 }
 
-class InsertFrame extends JFrame{
+class InsertFrame extends JFrame {
 	private Container del = this;
-	
-	private JLabel title = new JLabel("ªı∑ŒøÓ ¡˜ø¯ ¡§∫∏ √ﬂ∞°");
-	
+
+	private JLabel title = new JLabel("ÏÉàÎ°úÏö¥ ÏßÅÏõê Ï†ïÎ≥¥ Ï∂îÍ∞Ä");
+
 	private JLabel FnameL = new JLabel("First Name: ");
 	private JTextField Fname = new JTextField();
-	
+
 	private JLabel MnameL = new JLabel("Middle init: ");
 	private JTextField Mname = new JTextField();
-	
+
 	private JLabel lnameL = new JLabel("Last Name: ");
 	private JTextField lname = new JTextField();
-	
+
 	private JLabel ssnL = new JLabel("ssn: ");
 	private JTextField ssn = new JTextField();
-	
+
 	private JLabel birthL = new JLabel("Birthdate: ");
 	private JTextField birth = new JTextField();
-	
+
 	private JLabel addressL = new JLabel("Address: ");
 	private JTextField address = new JTextField();
-	
-	private static final String sexString[] = {"M", "F"};
+
+	private static final String sexString[] = { "M", "F" };
 	private JLabel sexL = new JLabel("Sex");
 	private JComboBox sexC = new JComboBox(sexString);
-	
+
 	private JLabel salaryL = new JLabel("Salary: ");
 	private JTextField salary = new JTextField();
-	
+
 	private JLabel superSL = new JLabel("super_ssn: ");
 	private JTextField superS = new JTextField();
-	
+
 	private JLabel dnoL = new JLabel("Dno: ");
 	private JTextField dno = new JTextField();
-	private JButton b= new JButton("¡§∫∏ √ﬂ∞°«œ±‚");
-	
+	private JButton b = new JButton("Ï†ïÎ≥¥ Ï∂îÍ∞ÄÌïòÍ∏∞");
+
 	private JPanel top = new JPanel();
 	private JPanel button = new JPanel();
 	private JPanel bPanel = new JPanel();
-	
-	
+
 	public InsertFrame() {
-		setTitle("INSERT"); //¿©µµøÏ ¡¶∏Ò ª˝º∫
+		setTitle("INSERT"); // ÏúàÎèÑÏö∞ Ï†úÎ™© ÏÉùÏÑ±
 		setLayout(new BorderLayout());
-		
+
 		top.setLayout(new BorderLayout());
 		top.add(title, BorderLayout.CENTER);
-		
+
 		button.setLayout(new GridLayout(10, 2));
-		
-		button.add(FnameL); button.add(Fname);
-		button.add(MnameL); button.add(Mname);
-		button.add(lnameL); button.add(lname);
-		button.add(ssnL); button.add(ssn);
-		button.add(birthL); button.add(birth);
-		button.add(addressL); button.add(address);
-		button.add(sexL); button.add(sexC);
-		button.add(salaryL); button.add(salary);
-		button.add(superSL); button.add(superS);
-		button.add(dnoL); button.add(dno);
-		
+
+		button.add(FnameL);
+		button.add(Fname);
+		button.add(MnameL);
+		button.add(Mname);
+		button.add(lnameL);
+		button.add(lname);
+		button.add(ssnL);
+		button.add(ssn);
+		button.add(birthL);
+		button.add(birth);
+		button.add(addressL);
+		button.add(address);
+		button.add(sexL);
+		button.add(sexC);
+		button.add(salaryL);
+		button.add(salary);
+		button.add(superSL);
+		button.add(superS);
+		button.add(dnoL);
+		button.add(dno);
+
 		bPanel.add(b);
-		
-		
+
 		this.add(top, BorderLayout.NORTH);
 		this.add(button, BorderLayout.CENTER);
 		this.add(b, BorderLayout.SOUTH);
-		
+
 		InsertHandler handler = new InsertHandler();
-		
+
 		b.addActionListener(handler);
-		
+
 		setSize(500, 500);
 		setVisible(true);
-		
+
 	}
-	
-	private class InsertHandler implements ActionListener{
-		
+
+	private class InsertHandler implements ActionListener {
+
 		@Override
 		public void actionPerformed(ActionEvent arg0) {
-			//here to copy
+			// here to copy
 			Main getConn = new Main();
 			Connection conn = getConn.getConn();
-			
+
 			String sql = "insert into EMPLOYEE value(?, ?, ?, ?, ?, ?, ?, ?, ?, ?, CURRENT_TIMESTAMP(), CURRENT_TIMESTAMP())";
-			
+
 			try {
 				PreparedStatement p = conn.prepareStatement(sql);
 				p.clearParameters();
-				
+
 				p.setString(1, Fname.getText());
 				p.setString(2, Mname.getText());
 				p.setString(3, lname.getText());
 				p.setString(4, ssn.getText());
 				p.setString(5, birth.getText());
 				p.setString(6, address.getText());
-				p.setString(7, (String)sexC.getSelectedItem());
-				if(salary.getText().contentEquals("")) p.setDouble(8, 0);
-				else p.setDouble(8, Double.parseDouble(salary.getText()));
+				p.setString(7, (String) sexC.getSelectedItem());
+				if (salary.getText().contentEquals(""))
+					p.setDouble(8, 0);
+				else
+					p.setDouble(8, Double.parseDouble(salary.getText()));
 				p.setString(9, superS.getText());
-				if(dno.getText().contentEquals("")) p.setInt(10, 1);
-				else p.setInt(10, Integer.parseInt(dno.getText()));
-				
+				if (dno.getText().contentEquals(""))
+					p.setInt(10, 1);
+				else
+					p.setInt(10, Integer.parseInt(dno.getText()));
+
 				int c = p.executeUpdate();
-				if(c == 1) dispose();
-			} catch(SQLException e1) {e1.printStackTrace(); JOptionPane.showMessageDialog(null, "¥ŸΩ√ ¿‘∑¬«œººø‰.");}
+				if (c == 1)
+					dispose();
+			} catch (SQLException e1) {
+				e1.printStackTrace();
+				JOptionPane.showMessageDialog(null, "Îã§Ïãú ÏûÖÎ†•ÌïòÏÑ∏Ïöî.");
+			}
 		}
 	}
-	
+
 }
-
-
-
-
-
-
-
