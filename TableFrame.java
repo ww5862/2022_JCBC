@@ -3,7 +3,7 @@ import javax.swing.*;
 
 public class TableFrame extends JFrame {
 	public TableFrame() {
-		setTitle("GUI TITLE"); //À©µµ¿ì Á¦¸ñ »ý¼º
+		setTitle("GUI TITLE"); //ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½
 		setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		EmployeeTable t = new EmployeeTable();
 		
